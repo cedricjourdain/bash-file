@@ -7,6 +7,9 @@ alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias diff="diff --old-group-format=$'\e[0;31m%<\e[0m' --new-group-format=$'\e[0;31m%>\e[0m' --unchanged-group-format=$'\e[0;32m%=\e[0m' "
 
+#function lfs_ls { if [ -z "$1" ] ; then f="." ; else f="$1"; fi ; lfs find "$f" -maxdepth 1 ; } 
+#alias ls='lfs_ls' 
+
 ## Prompt before overwrite
 alias cp='cp -i'
 alias mv='mv -i'
@@ -27,8 +30,6 @@ alias folders="find . -maxdepth 1 -type d -print | xargs du -sk | sort -rn"
 ## Get top process eating memory
 alias psmem10='ps auxf | sort -nr -k 4 | head -10'
 
-## Estimate file space usage
-alias du='du -ch | sort -h'
 
 ## Get rid of command not found
 alias cd..='cd ..'
@@ -52,5 +53,4 @@ alias psg="ps aux | grep -v grep | grep -i -e VSZ -e"
 # qu shows my own jobs sorted by sequence nr
 alias qa="squeue -S p"
 alias qu="squeue -l -u $USER | sort -n"
-alias squeue="squeue -o '%.18i %.30j %.8u %.8T %.10M %.9l %.6D %.8p %.8Q %.20N %k %R %.20S'"
-
+alias squeue="squeue -o '%.8i %.12j %.8u %.6T %.6M %.9l %.4D %.6C %.6b %.10N %.8Q %k %.20S %.10R %.8P'"
