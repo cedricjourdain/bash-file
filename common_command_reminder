@@ -3,12 +3,18 @@ find . | sed 's/[^/]*\//|   /g;s/| *\([^| ]\)/+--- \1/' :  Affche l'arborescence
 find . -maxdepth 6 -type d -exec ls -d "{}" \; | grep bin
 for i in `find -name test-qe-6.1*.output`; do echo $i && grep "All done" $i; done
 bc -l <<< 193/268*100
-for i in `ls`; do echo $i && find $i | wc -l; done
 scp jourdain@occigen.cines.fr:/home/jourdain/config.log .
 lr easyconfigs/ | awk -F " " '{ print $9 }' |  awk -F - '{ print $1 }'
 env | grep SLURM | awk -F= '{print $1}' | tr '\n' ' '
 echo `scontrol -o show nodes n[1040-1059] | egrep -o 'FreeMem=[0-9]+' |  awk -F= '\{print \$2\}'` | tr $' ' '$+'  | bc -l $
 echo `scontrol -o show nodes n[1040-1059] | egrep -o 'FreeMem=[0-9]+' |  awk -F= '{print $2}'` | tr ' ' '+' | bc -l
+top	-> H : vue par Threads
+	-> 1 activité cou
+	-> m : vue memoire "en barre"
+echo "($(echo `cat /opt/software/maxrss/job_maxrss.log | grep 8367105: | awk -F ":" '{print $4}'`| tr ' ' '+'))/(1024*1024*1024)" | bc -l
+grep 7480520 /opt/software/maxrss/job_maxrss.log|tr : " "|sort -nk13|awk '{for(i=1;i<=NF;++i)if(i==13){printf $i" "$i/1024/1024/1024"Gio" }else{printf $i" "};printf "\n"}'|tail -n 5
+top -d 60 | grep "KiB Mem" : Afficher la consommation mémoire a partir du top toute les 60 secondes
+env | grep DIR | awk -F= '{print $1}' | tr '\n' ' '
 
 # SBATCH
 sacct -X -u $USER --starttime 2017-08-09 --format=User,JobID,Jobname,GID,state,time,start,end,elapsed,nnodes,ncpus,CPUTimeRAW,Comment,MaxRSS
@@ -16,9 +22,11 @@ sacct -X -j 8066336 --format=User,Jobname,state,time,start,end,elapsed,nnodes,nc
 salloc -N 2 -n 56 -t 00:10:00 -C BDW28
 
 # GIT
-ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 git -c http.sslVerify=false clone https://depot.cines.fr/hautreux/Standard-Software-Installation.git
 git config --global http.sslVerify "false"
 cat Mem* | awk F" " '{ printf("%s %s %s\n",$6,$8,$10) }' : affiche les valeurs 6,8 et 10 (des valeurs séparé par un espace)
-top -d 60 | grep "KiB Mem" : Afficher la consommation mémoire a partir du top toute les 60 secondes
-git reset --hard 1798b24 : revient à l'état 1798b24
+
+# HeMP
+export PRIVATE_KEY=/panfs/panasas/support/keys/
+export PUBLIC_KEY=/opt/software/keys/
+export PASSWORD_DIR=/panfs/panasas/support
