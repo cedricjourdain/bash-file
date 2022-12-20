@@ -2,6 +2,7 @@
 find . | sed 's/[^/]*\//|   /g;s/| *\([^| ]\)/+--- \1/' :  Affche l'arborescence
 find . -maxdepth 6 -type d -exec ls -d "{}" \; | grep bin
 for i in `find -name test-qe-6.1*.output`; do echo $i && grep "All done" $i; done
+for i in `grep -r -l LUSTER *`; do sed -i 's|LUSTER|LUSTRE|g' $i; done
 bc -l <<< 193/268*100
 scp jourdain@occigen.cines.fr:/home/jourdain/config.log .
 lr easyconfigs/ | awk -F " " '{ print $9 }' |  awk -F - '{ print $1 }'
