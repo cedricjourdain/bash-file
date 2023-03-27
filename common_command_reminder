@@ -9,25 +9,30 @@ lr easyconfigs/ | awk -F " " '{ print $9 }' |  awk -F - '{ print $1 }'
 env | grep SLURM | awk -F= '{print $1}' | tr '\n' ' '
 echo `scontrol -o show nodes n[1040-1059] | egrep -o 'FreeMem=[0-9]+' |  awk -F= '\{print \$2\}'` | tr $' ' '$+'  | bc -l $
 echo `scontrol -o show nodes n[1040-1059] | egrep -o 'FreeMem=[0-9]+' |  awk -F= '{print $2}'` | tr ' ' '+' | bc -l
-top	-> H : vue par Threads
-	-> 1 activité cou
-	-> m : vue memoire "en barre"
+top -> H : vue par Threads
+    -> 1 activité cou
+    -> m : vue memoire "en barre"
 echo "($(echo `cat /opt/software/maxrss/job_maxrss.log | grep 8367105: | awk -F ":" '{print $4}'`| tr ' ' '+'))/(1024*1024*1024)" | bc -l
 grep 7480520 /opt/software/maxrss/job_maxrss.log|tr : " "|sort -nk13|awk '{for(i=1;i<=NF;++i)if(i==13){printf $i" "$i/1024/1024/1024"Gio" }else{printf $i" "};printf "\n"}'|tail -n 5
 top -d 60 | grep "KiB Mem" : Afficher la consommation mémoire a partir du top toute les 60 secondes
 env | grep DIR | awk -F= '{print $1}' | tr '\n' ' '
+while [ i=0 ]; do gstack   `pstree -apu $USER | grep "nom de l'executable" | head -1 |awk -F'[,]' '{print $2}' | awk '{print $1}'`; done # on compute node
+
+# Modules
+module avail 2> mavail.txt ; grep netcdf mavail.txt
+module avail 2>&1 | grep netcdf
 
 # SBATCH
 sacct -X -u $USER --starttime 2017-08-09 --format=User,JobID,Jobname,GID,state,time,start,end,elapsed,nnodes,ncpus,CPUTimeRAW,Comment,MaxRSS
 sacct -X -j 8066336 --format=User,Jobname,state,time,start,end,elapsed,nnodes,ncpus,CPUTimeRAW,Comment,nodelist%50
 salloc -N 2 -n 56 -t 00:10:00 -C BDW28
+srun -N1 -n1 -c8 numactl -H
+sinfo -o '%.6P %.5a %.10l %.16F %30N' #with : A = Allocated; I = Idle; O = Other state (failed, drained…); T = Total
+sinfo -o '%9R  %6c  %7m  %20f  %17G  %20F' #with : A = Allocated; I = Idle; O = Other state (failed, drained…); T = Total
 
 # GIT
 git -c http.sslVerify=false clone https://depot.cines.fr/hautreux/Standard-Software-Installation.git
 git config --global http.sslVerify "false"
 cat Mem* | awk F" " '{ printf("%s %s %s\n",$6,$8,$10) }' : affiche les valeurs 6,8 et 10 (des valeurs séparé par un espace)
-
-# HeMP
-export PRIVATE_KEY=/panfs/panasas/support/keys/
-export PUBLIC_KEY=/opt/software/keys/
-export PASSWORD_DIR=/panfs/panasas/support
+git stash push -m "message"
+git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit
