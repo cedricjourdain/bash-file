@@ -17,6 +17,7 @@ grep 7480520 /opt/software/maxrss/job_maxrss.log|tr : " "|sort -nk13|awk '{for(i
 top -d 60 | grep "KiB Mem" : Afficher la consommation mémoire a partir du top toute les 60 secondes
 env | grep DIR | awk -F= '{print $1}' | tr '\n' ' '
 while [ i=0 ]; do gstack   `pstree -apu $USER | grep "nom de l'executable" | head -1 |awk -F'[,]' '{print $2}' | awk '{print $1}'`; done # on compute node
+lfs find . -type f  | wc -l # count number of files
 
 # Modules
 module avail 2> mavail.txt ; grep netcdf mavail.txt
