@@ -2,7 +2,7 @@
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
-    . /etc/bashrc
+	. /etc/bashrc
 fi
 
 # User specific environment
@@ -11,6 +11,11 @@ then
     PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
 export PATH=$PATH:/lus/home/BCINES/dci/jourdain/tools/VSCode-linux-x64/bin
+
+# History settings
+export PROMPT_COMMAND="history -a;  history -c; history -r"
+shopt -s direxpand
+export HISTSIZE=-1; export HISTFILESIZE=-1 # Unlimited history
 
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
@@ -23,8 +28,14 @@ fi
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
+# Display git branch name
+parse_git_branch() {
+     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+export PS1="\u@\h \[\033[32m\]\w\[\033[33m\]\$(parse_git_branch)\[\033[00m\] $ "
+
 # Random
-alias enter_matrix='echo -e "\e[32m"; while :; do for i in {1..64}; do r="$(($RANDOM % 2))"; if [[ $(($RANDOM % 5)) == 1 ]]; then if [[ $(($RANDOM % 4)) == 1 ]]; then v+="\e[1m $r   "; else v+="\e[2m  $r   "; fi; else v+="     "; fi; done; echo -e "$v"; v=""; done'
+alias enter_matrix='echo -e "\e[32m"; while :; do for i in {1..64}; do r="$(($RANDOM % 2))"; if [[ $(($RANDOM % 5)) == 1 ]]; then if [[ $(($RANDOM % 4)) == 1 ]]; then v+="\e[1m $r   "; else v+="\e[2m $r   "; fi; else v+="     "; fi; done; echo -e "$v"; v=""; done'
 
 # IP address lookup
 function whatismyip() {
@@ -66,4 +77,3 @@ function extract() {
     fi
 }
 
-                                   
