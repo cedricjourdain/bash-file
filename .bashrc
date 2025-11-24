@@ -1,16 +1,16 @@
 # .bashrc
+#  
+# Best practices: Aliases, prompts, shortcuts, purely interactive features
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
 fi
 
-# User specific environment
-if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]
-then
-    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+# User specific environment and startup programs
+if [ -f ~/.bash_aliases ]; then
+        . ~/.bash_aliases
 fi
-export PATH=$PATH:/lus/home/BCINES/dci/jourdain/tools/VSCode-linux-x64/bin
 
 # History settings
 export PROMPT_COMMAND="history -a;  history -c; history -r"
@@ -20,7 +20,7 @@ export HISTSIZE=-1; export HISTFILESIZE=-1 # Unlimited history
 # Uncomment the following line if you don't like systemctl's auto-paging feature:
 # export SYSTEMD_PAGER=
 
-# User specific aliases and functions
+# User specific aliases and functions, Advanced Ctrl+R with proposition
 if [ ! -d ~/.fzf ]; then
         git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
         ~/.fzf/install
@@ -77,3 +77,5 @@ function extract() {
     fi
 }
 
+export COLORTERM=gnome-terminal
+shopt -s direxpand
